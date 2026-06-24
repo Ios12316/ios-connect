@@ -12,6 +12,7 @@ export const createListing = async (req, res) => {
       price: req.body.price,
       category: req.body.category,
       images: req.body.images || [],
+      phoneNumber: req.body.phoneNumber || "",
     });
 
     res.status(201).json({
@@ -31,7 +32,7 @@ export const getAllListings = async (req, res) => {
     const listings = await MarketplacePost.find()
       .populate(
         "user",
-        "fullName profilePicture"
+        "fullName profilePicture email department faculty level bio"
       )
       .sort({ createdAt: -1 });
 
@@ -54,7 +55,7 @@ export const getSingleListing = async (req, res) => {
       req.params.id
     ).populate(
       "user",
-      "fullName profilePicture"
+      "fullName profilePicture email department faculty level bio"
     );
 
     if (!listing) {

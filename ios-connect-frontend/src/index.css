@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-slate-250: #cbd5e1;
+  --color-slate-350: #94a3b8;
+  --color-slate-650: #475569;
+  --color-slate-850: #1b253b;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: #020617;
+  color: #f1f5f9;
+}

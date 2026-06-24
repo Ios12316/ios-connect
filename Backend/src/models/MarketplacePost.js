@@ -50,6 +50,11 @@ const marketplacePostSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    phoneNumber: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

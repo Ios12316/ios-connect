@@ -10,6 +10,7 @@ const userValidation = Joi.object({
     level: Joi.string().trim().required(),
     gender: Joi.string().trim().required(),
     entryYear: Joi.string().trim().required()
+    // profilePicture: Joi.string().trim().required()
 });
 
 const loginValidation = Joi.object({
