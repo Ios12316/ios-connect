@@ -34,7 +34,7 @@ export const createComment = async (req, res) => {
         recipient: post.user,
         sender: req.user._id,
         type: "comment",
-        content:
+        message:
           "commented on your post",
       });
     }

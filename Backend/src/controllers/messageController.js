@@ -29,7 +29,7 @@ export const sendMessage = async (req, res) => {
         recipient: receiverId,
         sender: req.user._id,
         type: "message",
-        content: "Sent you a message",
+        message: "Sent you a message",
       });
     }
 
