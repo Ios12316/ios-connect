@@ -22,7 +22,8 @@ import {
   Check,
   UserCheck,
   Mail,
-  Send
+  Send,
+  ArrowLeft
 } from "lucide-react";
 import API from "../services/axios";
 import { AuthContext } from "../context/Context";
@@ -567,6 +568,13 @@ const Dashboard = () => {
         <div>
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigate(-1)}
+                className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-100 hover:scale-105 active:scale-95 transition-all duration-200"
+                title="Go Back"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
               <div className="p-2 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
                 <BookOpen className="h-5 w-5" />
               </div>
@@ -644,6 +652,13 @@ const Dashboard = () => {
         {/* MOBILE HEADER */}
         <header className="lg:hidden flex items-center justify-between px-6 py-4 bg-slate-100/90 dark:bg-slate-900/40 border-b border-slate-200 dark:border-slate-800/80 backdrop-blur-md sticky top-0 z-30">
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-100 hover:scale-105 active:scale-95 transition-all duration-200 mr-1"
+              title="Go Back"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
             <div className="p-1.5 rounded-lg bg-indigo-500 text-white">
               <BookOpen className="h-4 w-4" />
             </div>
