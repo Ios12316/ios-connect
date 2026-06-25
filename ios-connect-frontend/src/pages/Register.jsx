@@ -247,7 +247,10 @@ const Register = () => {
       const response = await API.post("/users/register", payload);
       toast.success(response.data.message || "Registration Successful!");
       
-      // Save user to context state
+      // Save user and token to state
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+      }
       if (response.data.user) {
         setUser(response.data.user);
       }

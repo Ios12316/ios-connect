@@ -55,7 +55,10 @@ const Login = () => {
 
       toast.success(response.data.message || "Welcome back!");
       
-      // Save authenticated user to global context
+      // Save authenticated user and token
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+      }
       if (response.data.user) {
         setUser(response.data.user);
       }

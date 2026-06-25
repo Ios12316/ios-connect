@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Logout failed on server:", error);
     } finally {
+      localStorage.removeItem("token");
       setUser(null);
     }
   };
