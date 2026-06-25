@@ -36,6 +36,7 @@ const Dashboard = () => {
   // Dashboard navigation states
   const [activeTab, setActiveTab] = useState("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [feedScope, setFeedScope] = useState("general");
 
   // Sub-module states
   const [feedPosts, setFeedPosts] = useState([]);
@@ -112,7 +113,7 @@ const Dashboard = () => {
       setDataLoading(true);
       try {
         if (activeTab === "feed") {
-          const response = await API.get("/community/feed");
+          const response = await API.get(`/community/feed?scope=${feedScope}`);
           setFeedPosts(response.data.posts || []);
         } else if (activeTab === "roommates") {
           const response = await API.get("/roommates");
@@ -136,7 +137,7 @@ const Dashboard = () => {
         } else if (activeTab === "overview") {
           // prefetch counts or feeds
           const [feedRes, roommateRes, studyRes, marketRes] = await Promise.all([
-            API.get("/community/feed").catch(() => ({ data: { posts: [] } })),
+            API.get("/community/feed?scope=general").catch(() => ({ data: { posts: [] } })),
             API.get("/roommates").catch(() => ({ data: { posts: [] } })),
             API.get("/study-partners").catch(() => ({ data: { posts: [] } })),
             API.get("/marketplace").catch(() => ({ data: { listings: [] } }))
@@ -155,7 +156,7 @@ const Dashboard = () => {
     };
 
     fetchData();
-  }, [activeTab, user]);
+  }, [activeTab, user, feedScope]);
 
   // Synchronize profile form when user context becomes available
   useEffect(() => {
@@ -357,8 +358,19 @@ const Dashboard = () => {
     e.preventDefault();
     if (!feedInput.content.trim()) return;
     try {
-      const response = await API.post("/community", { content: feedInput.content });
-      setFeedPosts(prev => [response.data.post, ...prev]);
+      const response = await API.post("/community", { 
+        content: feedInput.content,
+        scope: feedScope 
+      });
+      const newPost = {
+        ...response.data.post,
+        user: {
+          _id: user._id,
+          fullName: user.fullName,
+          profilePicture: user.profilePicture
+        }
+      };
+      setFeedPosts(prev => [newPost, ...prev]);
       setFeedInput({ content: "" });
       setIsFeedModalOpen(false);
       toast.success("Post shared successfully!");
@@ -814,17 +826,59 @@ const Dashboard = () => {
               {/* SUBTAB 2: CLASS FORUM (FEED) */}
               {activeTab === "feed" && (
                 <div className="space-y-6">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                      <h1 className="text-xl md:text-2xl font-bold text-white">Class Forum Feed</h1>
-                      <p className="text-xs text-slate-500 mt-1">Discussions for {user?.department} - {user?.level}</p>
+                      <h1 className="text-xl md:text-2xl font-bold text-white">
+                        {feedScope === "general" && "General Student Forum"}
+                        {feedScope === "faculty" && `${user?.faculty || "Faculty"} Forum`}
+                        {feedScope === "department" && "Department & Level Forum"}
+                      </h1>
+                      <p className="text-xs text-slate-500 mt-1">
+                        {feedScope === "general" && "All campus students discussion feed"}
+                        {feedScope === "faculty" && `Discussions for faculty of ${user?.faculty}`}
+                        {feedScope === "department" && `Discussions for ${user?.department} - ${user?.level}`}
+                      </p>
                     </div>
                     <button
                       onClick={() => setIsFeedModalOpen(true)}
-                      className="flex items-center gap-2 py-2.5 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 active:scale-95 transition-all"
+                      className="flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 active:scale-95 transition-all"
                     >
                       <Plus className="h-4 w-4" />
                       Create Post
+                    </button>
+                  </div>
+
+                  {/* Scope Selector Sub-tabs */}
+                  <div className="flex gap-2 p-1 bg-slate-950/60 border border-slate-850 rounded-xl max-w-md">
+                    <button
+                      onClick={() => setFeedScope("general")}
+                      className={`flex-1 py-2 px-3 text-center text-xs font-semibold rounded-lg transition-all ${
+                        feedScope === "general"
+                          ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/10"
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      General Forum
+                    </button>
+                    <button
+                      onClick={() => setFeedScope("faculty")}
+                      className={`flex-1 py-2 px-3 text-center text-xs font-semibold rounded-lg transition-all ${
+                        feedScope === "faculty"
+                          ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/10"
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      Faculty Forum
+                    </button>
+                    <button
+                      onClick={() => setFeedScope("department")}
+                      className={`flex-1 py-2 px-3 text-center text-xs font-semibold rounded-lg transition-all ${
+                        feedScope === "department"
+                          ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/10"
+                          : "text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      Dept & Level
                     </button>
                   </div>
 
@@ -832,7 +886,9 @@ const Dashboard = () => {
                     <div className="text-center py-12 text-slate-500 text-sm">Loading classroom feed...</div>
                   ) : feedPosts.length === 0 ? (
                     <div className="text-center py-12 border border-dashed border-slate-850 rounded-2xl text-slate-500 text-sm">
-                      No forum discussions found for your department and level yet. Start the first topic!
+                      {feedScope === "general" && "No general forum discussions found yet. Start the first topic!"}
+                      {feedScope === "faculty" && `No discussions found for Faculty of ${user?.faculty} yet. Start the first topic!`}
+                      {feedScope === "department" && "No forum discussions found for your department and level yet. Start the first topic!"}
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -848,7 +904,18 @@ const Dashboard = () => {
                                 {post.user?.fullName ? post.user.fullName[0].toUpperCase() : "S"}
                               </div>
                               <div>
-                                <h4 className="text-sm font-bold text-slate-200">{post.user?.fullName}</h4>
+                                <div className="flex items-center gap-2">
+                                  <h4 className="text-sm font-bold text-slate-200">{post.user?.fullName}</h4>
+                                  <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${
+                                    post.scope === "general" 
+                                      ? "bg-blue-500/10 text-blue-400 border border-blue-500/20" 
+                                      : post.scope === "faculty"
+                                      ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                                      : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+                                  }`}>
+                                    {post.scope === "general" ? "General" : post.scope === "faculty" ? "Faculty" : "Department"}
+                                  </span>
+                                </div>
                                 <p className="text-[10px] text-slate-500 mt-0.5">{post.department} • {post.level} • {new Date(post.createdAt).toLocaleDateString()}</p>
                               </div>
                             </div>
@@ -1482,14 +1549,24 @@ const Dashboard = () => {
               >
                 <X className="h-5 w-5" />
               </button>
-              <h3 className="text-md font-bold text-white mb-4">Start Classroom Discussion</h3>
+              <h3 className="text-md font-bold text-white mb-4">
+                {feedScope === "general" && "Post to General Forum"}
+                {feedScope === "faculty" && `Post to Faculty Forum (${user?.faculty})`}
+                {feedScope === "department" && `Post to Dept Forum (${user?.department} - ${user?.level})`}
+              </h3>
               <form onSubmit={handleCreateFeed} className="space-y-4">
                 <div>
                   <textarea
                     rows={4}
                     value={feedInput.content}
                     onChange={(e) => setFeedInput({ content: e.target.value })}
-                    placeholder="Ask a question, share campus updates, or post slides..."
+                    placeholder={
+                      feedScope === "general"
+                        ? "Share something with all students on campus..."
+                        : feedScope === "faculty"
+                        ? `Post updates for the Faculty of ${user?.faculty}...`
+                        : "Ask a question, share campus updates, or post slides..."
+                    }
                     className="w-full bg-slate-950 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-slate-200 text-xs outline-none resize-none"
                     required
                   />
@@ -1498,7 +1575,9 @@ const Dashboard = () => {
                   type="submit"
                   className="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-98"
                 >
-                  Share to Class Feed
+                  {feedScope === "general" && "Share to General Forum"}
+                  {feedScope === "faculty" && "Share to Faculty Forum"}
+                  {feedScope === "department" && "Share to Class Feed"}
                 </button>
               </form>
             </motion.div>

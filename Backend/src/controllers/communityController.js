@@ -2,9 +2,14 @@ import CommunityPost from "../models/communityPost.js";
 
 export const createCommunityPost = async (req, res) => {
   try {
+    const { content, scope } = req.body;
+    const allowedScopes = ["general", "faculty", "department"];
+    const postScope = allowedScopes.includes(scope) ? scope : "department";
+
     const post = await CommunityPost.create({
       user: req.user._id,
-      content: req.body.content,
+      content,
+      scope: postScope,
       faculty: req.user.faculty,
       department: req.user.department,
       level: req.user.level,
@@ -26,11 +31,24 @@ export const createCommunityPost = async (req, res) => {
 
 export const getCommunityFeed = async (req, res) => {
   try {
+    const { scope } = req.query;
 
-    const posts = await CommunityPost.find({
-      department: req.user.department,
-      level: req.user.level,
-    })
+    let filter = {};
+    if (scope === "general") {
+      filter = { scope: "general" };
+    } else if (scope === "faculty") {
+      filter = { scope: "faculty", faculty: req.user.faculty };
+    } else {
+      // Default to department forum (with backward compatibility)
+      filter = {
+        $or: [
+          { scope: "department", department: req.user.department, level: req.user.level },
+          { scope: { $exists: false }, department: req.user.department, level: req.user.level }
+        ]
+      };
+    }
+
+    const posts = await CommunityPost.find(filter)
       .populate(
         "user",
         "fullName profilePicture"

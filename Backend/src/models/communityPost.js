@@ -28,6 +28,11 @@ const communityPostSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    scope: {
+      type: String,
+      enum: ["general", "faculty", "department"],
+      default: "department",
+    },
     commentsCount: {
       type: Number,
       default: 0,
