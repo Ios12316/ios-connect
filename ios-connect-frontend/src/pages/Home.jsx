@@ -35,7 +35,7 @@ const Home = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentBgIndex((prevIndex) => (prevIndex + 1) % heroBgs.length);
-    }, 3000);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
