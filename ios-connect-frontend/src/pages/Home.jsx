@@ -23,6 +23,21 @@ import ContactModal from "../components/ContactModal";
 
 const Home = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+
+  const heroBgs = [
+    '/students-hero.png',
+    '/hero-bg-1.png',
+    '/hero-bg-2.png',
+    '/hero-bg-3.png'
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentBgIndex((prevIndex) => (prevIndex + 1) % heroBgs.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
 
   const fadeIn = {
@@ -102,11 +117,17 @@ const Home = () => {
       {/* HERO SECTION */}
       <header className="relative min-h-[90vh] md:min-h-screen flex items-center justify-center pt-24 md:pt-16 isolate">
         
-        {/* Background Student Image with Gradients */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat -z-20"
-          style={{ backgroundImage: `url('/students-hero.png')` }}
-        />
+        {/* Background Student Images with smooth crossfades */}
+        {heroBgs.map((bg, idx) => (
+          <div 
+            key={bg}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat -z-20 transition-opacity duration-1000 ease-in-out"
+            style={{ 
+              backgroundImage: `url('${bg}')`,
+              opacity: currentBgIndex === idx ? 1 : 0
+            }}
+          />
+        ))}
         {/* Gradient Overlay for Text Visibility */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/70 to-slate-950/45 -z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent -z-10" />

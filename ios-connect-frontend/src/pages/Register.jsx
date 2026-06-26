@@ -243,12 +243,10 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
-    /*
     if (!formData.profilePicture) {
       toast.error("Please upload a profile photo to complete registration");
       return;
     }
-    */
     setLoading(true);
     try {
       // Map school name to "AAUA" to match default or validate backend expectation
