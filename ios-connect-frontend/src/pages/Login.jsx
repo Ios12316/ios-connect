@@ -25,10 +25,31 @@ const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleResendVerification = async () => {
+    if (!unverifiedEmail) return;
+    setResendLoading(true);
+    try {
+      const response = await API.post("/users/resend-verification", {
+        email: unverifiedEmail
+      });
+      toast.success(response.data.message || "Verification link sent!");
+      setShowResend(false);
+    } catch (error) {
+      console.error(error);
+      const errorMsg = error.response?.data?.message || "Failed to resend link. Please try again.";
+      toast.error(errorMsg);
+    } finally {
+      setResendLoading(false);
+    }
   };
 
   const isFormValid = () => {
@@ -67,6 +88,10 @@ const Login = () => {
       navigate("/dashboard");
     } catch (error) {
       console.error(error);
+      if (error.response?.status === 401 && error.response?.data?.unverified) {
+        setShowResend(true);
+        setUnverifiedEmail(formData.email.toLowerCase().trim());
+      }
       const errorMsg = error.response?.data?.message || "Invalid email or password.";
       toast.error(errorMsg);
     } finally {
@@ -101,6 +126,20 @@ const Login = () => {
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             
+            {showResend && (
+              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs leading-relaxed space-y-2">
+                <p>It looks like you haven't verified your email address yet. Please check your inbox or spam folder.</p>
+                <button
+                  type="button"
+                  onClick={handleResendVerification}
+                  disabled={resendLoading}
+                  className="text-amber-400 hover:text-amber-300 font-bold transition-all underline flex items-center gap-1 disabled:opacity-50"
+                >
+                  {resendLoading ? "Sending Link..." : "Resend Verification Email"}
+                </button>
+              </div>
+            )}
+
             {/* Email Address */}
             <div>
               <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">

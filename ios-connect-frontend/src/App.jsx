@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -42,6 +43,11 @@ function App() {
         <Route
           path="/reset-password/:token"
           element={<ResetPassword />}
+        />
+
+        <Route
+          path="/verify-email/:token"
+          element={<VerifyEmail />}
         />
 
         <Route

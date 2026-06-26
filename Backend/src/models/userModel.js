@@ -53,9 +53,19 @@ const userSchema = new mongoose.Schema({
         enum: ["student", "admin"],
         default: "student"
     },
+    phoneNumber: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
     isVerified: {
         type: Boolean,
         default: false
+    },
+    verificationToken: {
+        type: String,
+        default: ""
     },
     resetPasswordToken: {
         type: String,

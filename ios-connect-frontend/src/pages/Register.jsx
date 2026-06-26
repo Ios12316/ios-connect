@@ -15,7 +15,8 @@ import {
   CheckCircle,
   AlertCircle,
   Camera,
-  UploadCloud
+  UploadCloud,
+  Phone
 } from "lucide-react";
 import API from "../services/axios";
 import { AuthContext } from "../context/Context";
@@ -131,12 +132,14 @@ const Register = () => {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(0); // 1 = next, -1 = back
   const [loading, setLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Form Fields State
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
+    phoneNumber: "",
     school: "Adekunle Ajasin University, Akungba-Akoko (AAUA)",
     gender: "",
     faculty: "",
@@ -185,11 +188,13 @@ const Register = () => {
 
   // Step Validations
   const isStep1Valid = () => {
+    const phoneRegex = /^(?:\+234|234|0)[789]\d{9}$/;
     return (
       formData.fullName.trim() !== "" &&
       formData.email.trim() !== "" &&
       formData.email.includes("@") &&
-      formData.password.length >= 6
+      formData.password.length >= 6 &&
+      phoneRegex.test(formData.phoneNumber.trim())
     );
   };
 
@@ -210,9 +215,16 @@ const Register = () => {
   };
 
   const nextStep = () => {
-    if (step === 1 && !isStep1Valid()) {
-      toast.error("Please fill in all fields correctly (Password min 6 chars)");
-      return;
+    if (step === 1) {
+      if (!formData.fullName.trim() || !formData.email.trim() || !formData.email.includes("@") || formData.password.length < 6) {
+        toast.error("Please fill in name, email, and password (min 6 chars)");
+        return;
+      }
+      const phoneRegex = /^(?:\+234|234|0)[789]\d{9}$/;
+      if (!phoneRegex.test(formData.phoneNumber.trim())) {
+        toast.error("Please enter a valid Nigerian phone number");
+        return;
+      }
     }
     if (step === 2 && !isStep2Valid()) {
       toast.error("Please select your gender");
@@ -247,16 +259,8 @@ const Register = () => {
       const response = await API.post("/users/register", payload);
       toast.success(response.data.message || "Registration Successful!");
       
-      // Save user and token to state
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-      }
-      if (response.data.user) {
-        setUser(response.data.user);
-      }
-      
-      // Redirect to dashboard page
-      navigate("/dashboard");
+      // Update submitted status to display verification instructions
+      setIsSubmitted(true);
     } catch (error) {
       console.error(error);
       const errorMsg = error.response?.data?.message || "Something went wrong during registration.";
@@ -283,6 +287,42 @@ const Register = () => {
       transition: { duration: 0.2, ease: "easeInOut" }
     })
   };
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center pt-28 pb-12 px-6 relative overflow-hidden">
+        <Navbar />
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+
+        <div className="w-full max-w-md mt-6">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-white">Verify Your Email</h2>
+            <p className="text-slate-400 text-sm mt-2">Almost there! Let's activate your student account</p>
+          </div>
+
+          <motionFramer.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-slate-900/40 border border-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl text-center space-y-6"
+          >
+            <div className="flex justify-center text-emerald-400">
+              <CheckCircle className="h-16 w-16 animate-bounce" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Registration Successful!</h3>
+            <p className="text-sm text-slate-450 leading-relaxed">
+              We've sent a verification link to <strong className="text-indigo-300">{formData.email}</strong>. Please check your student inbox and click the link to activate your account.
+            </p>
+            <div className="pt-4 flex flex-col gap-3">
+              <Link to="/login" className="w-full text-center py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold shadow-lg shadow-indigo-500/10 transition-all hover:scale-[1.01] active:scale-[0.99]">
+                Go to Sign In
+              </Link>
+            </div>
+          </motionFramer.div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center pt-28 pb-12 px-6 relative overflow-hidden">
@@ -381,6 +421,28 @@ const Register = () => {
                       />
                     </div>
                     <span className="text-[10px] text-slate-500 mt-1.5 block">Use your university/standard student email address.</span>
+                  </div>
+
+                  {/* Phone Number */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                      Phone Number (Nigerian Format)
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                        <Phone className="h-5 w-5" />
+                      </div>
+                      <input
+                        type="tel"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
+                        placeholder="08031234567"
+                        className="w-full bg-slate-950/80 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 pl-11 pr-4 text-slate-250 text-sm placeholder-slate-600 transition-all outline-none"
+                        required
+                      />
+                    </div>
+                    <span className="text-[10px] text-slate-500 mt-1.5 block">Required for authentication and communication (e.g. 08031234567).</span>
                   </div>
 
                   {/* Password */}
