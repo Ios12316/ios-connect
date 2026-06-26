@@ -193,7 +193,7 @@ const Home = () => {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-slate-200">Marketplace Listing</h4>
-                    <p className="text-xs text-slate-400 mt-1">"Selling Calculus 101 textbook - $20 (Excellent Condition)"</p>
+                    <p className="text-xs text-slate-400 mt-1">"Selling Calculus 101 textbook - #2,000 (Excellent Condition)"</p>
                   </div>
                 </div>
 
@@ -203,7 +203,7 @@ const Home = () => {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-slate-200">Roommate Request</h4>
-                    <p className="text-xs text-slate-400 mt-1">"Looking for male roommate for off-campus flat - Budget $300"</p>
+                    <p className="text-xs text-slate-400 mt-1">"Looking for male roommate for off-campus flat - Budget #150,000"</p>
                   </div>
                 </div>
 
@@ -445,7 +445,7 @@ const Home = () => {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-slate-950 border-t border-slate-900/60 py-16">
+      <footer id="contact" className="bg-slate-950 border-t border-slate-900/60 py-16">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-12 gap-10">
           
           {/* Logo / Brand Info */}
@@ -499,11 +499,6 @@ const Home = () => {
           <div className="md:col-span-2">
             <h4 className="text-white text-xs font-semibold uppercase tracking-wider mb-5">Contact Support</h4>
             <ul className="space-y-3.5 text-xs sm:text-sm text-slate-400">
-              <li>
-                <a href="mailto:idowus187@gmail.com" className="hover:text-white transition-colors">
-                  idowus187@gmail.com
-                </a>
-              </li>
               <li>
                 <a href="https://wa.me/2348137451940" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   WhatsApp Support

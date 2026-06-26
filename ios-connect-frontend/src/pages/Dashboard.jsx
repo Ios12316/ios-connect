@@ -14,7 +14,7 @@ import {
   Plus, 
   Camera, 
   MapPin, 
-  DollarSign, 
+  Hash, 
   Calendar, 
   Tag, 
   ChevronRight,
@@ -28,6 +28,103 @@ import {
 import API from "../services/axios";
 import { AuthContext } from "../context/Context";
 import { toast } from "../store/notificationStore";
+
+const facultyDepartments = {
+  "Faculty of Agriculture": [
+    "Agricultural Economics",
+    "Agricultural Extension and Rural Development",
+    "Agronomy",
+    "Animal Science",
+    "Fisheries and Aquaculture",
+    "Forestry and Wildlife Management",
+    "Food Science and Technology"
+  ],
+  "Faculty of Arts": [
+    "English Studies",
+    "History and International Studies",
+    "Performing Arts",
+    "Yoruba",
+    "Linguistics",
+    "Linguistics/Yoruba",
+    "Philosophy",
+    "Religion and African Culture",
+    "French"
+  ],
+  "Faculty of Education": [
+    "Adult Education",
+    "English Education",
+    "History Education",
+    "Religious Education",
+    "Yoruba Education",
+    "Biology Education",
+    "Chemistry Education",
+    "Computer Science Education",
+    "Integrated Science Education",
+    "Mathematics Education",
+    "Physics Education",
+    "Health Education",
+    "Human Kinetics Education",
+    "Technical Education",
+    "Guidance and Counseling",
+    "Early Childhood Education",
+    "Educational Management",
+    "Geography Education",
+    "Political Science Education",
+    "Economics Education",
+    "Social Studies Education",
+    "Library and Information Studies"
+  ],
+  "Faculty of Environmental Design and Management": [
+    "Architecture",
+    "Estate Management",
+    "Surveying and Geoinformatics",
+    "Urban and Regional Planning"
+  ],
+  "Faculty of Law": [
+    "Law"
+  ],
+  "Faculty of Science": [
+    "Biochemistry",
+    "Chemistry",
+    "Industrial Chemistry",
+    "Animal and Environmental Biology",
+    "Mathematics",
+    "Industrial Mathematics",
+    "Geology",
+    "Applied Geophysics",
+    "Microbiology",
+    "Physics and Electronics",
+    "Plant Science and Biotechnology"
+  ],
+  "Faculty of Social Sciences": [
+    "Criminology and Security Studies",
+    "Economics",
+    "Geography and Planning Sciences",
+    "Mass Communication",
+    "Political Science",
+    "Pure and Applied Psychology",
+    "Sociology"
+  ],
+  "Faculty of Administration and Management Sciences": [
+    "Accounting",
+    "Banking and Finance",
+    "Business Administration",
+    "Public Administration"
+  ],
+  "Faculty of Allied Health Sciences": [
+    "Medical Laboratory Science",
+    "Public Health",
+    "Nursing Science"
+  ],
+  "Faculty of Computing": [
+    "Computer Science",
+    "Information and Communication Technology (ICT)",
+    "Software Engineering",
+    "Cyber Security",
+    "Data Science and Artificial Intelligence",
+    "Information Systems"
+  ]
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -639,9 +736,17 @@ const Dashboard = () => {
         {/* Sidebar Footer (Student Logged In) */}
         <div className="pt-6 border-t border-slate-200 dark:border-slate-800/60 flex flex-col gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="h-10 w-10 rounded-full bg-indigo-650 flex items-center justify-center font-bold text-white shadow-inner shrink-0">
-              {user?.fullName ? user.fullName[0].toUpperCase() : "S"}
-            </div>
+            {user?.profilePicture ? (
+              <img 
+                src={user.profilePicture} 
+                alt="Profile" 
+                className="h-10 w-10 rounded-full object-cover shrink-0 border border-slate-200 dark:border-slate-850"
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-indigo-650 flex items-center justify-center font-bold text-white shadow-inner shrink-0">
+                {user?.fullName ? user.fullName[0].toUpperCase() : "S"}
+              </div>
+            )}
             <div className="truncate">
               <p className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">{user?.fullName}</p>
               <p className="text-xs text-slate-500 truncate">{user?.email}</p>
@@ -896,13 +1001,23 @@ const Dashboard = () => {
                         <div key={post._id} className="bg-slate-900/30 border border-slate-850 rounded-2xl p-6 space-y-4 relative">
                           <div className="flex justify-between items-start">
                             <div className="flex items-center gap-3">
-                              <div 
-                                onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
-                                className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-white shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:bg-indigo-700 transition-all hover:scale-105" : ""} bg-indigo-650`}
-                                title={post.user?._id !== user._id ? "Send Direct Message" : ""}
-                              >
-                                {post.user?.fullName ? post.user.fullName[0].toUpperCase() : "S"}
-                              </div>
+                              {post.user?.profilePicture ? (
+                                <img 
+                                  src={post.user.profilePicture} 
+                                  alt="Author" 
+                                  onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
+                                  className={`h-9 w-9 rounded-full object-cover border border-slate-800 shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:scale-105 transition-all" : ""}`}
+                                  title={post.user?._id !== user._id ? "Send Direct Message" : ""}
+                                />
+                              ) : (
+                                <div 
+                                  onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
+                                  className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-white shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:bg-indigo-700 transition-all hover:scale-105" : ""} bg-indigo-650`}
+                                  title={post.user?._id !== user._id ? "Send Direct Message" : ""}
+                                >
+                                  {post.user?.fullName ? post.user.fullName[0].toUpperCase() : "S"}
+                                </div>
+                              )}
                               <div>
                                 <div className="flex items-center gap-2">
                                   <h4 className="text-sm font-bold text-slate-200">{post.user?.fullName}</h4>
@@ -955,13 +1070,23 @@ const Dashboard = () => {
                                     (commentsByPost[post._id] || []).map((comment) => (
                                       <div key={comment._id} className="bg-slate-950/40 border border-slate-900/80 rounded-xl p-3 flex justify-between items-start">
                                         <div className="flex items-start gap-2.5 min-w-0">
-                                          <div 
-                                            onClick={() => comment.user && comment.user._id !== user._id && startDirectMessage(comment.user)}
-                                            className={`h-7 w-7 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 text-xs shrink-0 ${comment.user?._id !== user._id ? "cursor-pointer hover:bg-indigo-650 hover:text-white" : ""} transition-colors`}
-                                            title={comment.user?._id !== user._id ? "Send Direct Message" : ""}
-                                          >
-                                            {comment.user?.fullName ? comment.user.fullName[0].toUpperCase() : "S"}
-                                          </div>
+                                          {comment.user?.profilePicture ? (
+                                            <img 
+                                              src={comment.user.profilePicture} 
+                                              alt="Commenter" 
+                                              onClick={() => comment.user && comment.user._id !== user._id && startDirectMessage(comment.user)}
+                                              className={`h-7 w-7 rounded-full object-cover border border-slate-800 shrink-0 ${comment.user?._id !== user._id ? "cursor-pointer hover:scale-105 transition-all" : ""}`}
+                                              title={comment.user?._id !== user._id ? "Send Direct Message" : ""}
+                                            />
+                                          ) : (
+                                            <div 
+                                              onClick={() => comment.user && comment.user._id !== user._id && startDirectMessage(comment.user)}
+                                              className={`h-7 w-7 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 text-xs shrink-0 ${comment.user?._id !== user._id ? "cursor-pointer hover:bg-indigo-650 hover:text-white" : ""} transition-colors`}
+                                              title={comment.user?._id !== user._id ? "Send Direct Message" : ""}
+                                            >
+                                              {comment.user?.fullName ? comment.user.fullName[0].toUpperCase() : "S"}
+                                            </div>
+                                          )}
                                           <div className="min-w-0">
                                             <p className="text-xs font-bold text-slate-200">
                                               {comment.user?.fullName}
@@ -1046,13 +1171,23 @@ const Dashboard = () => {
                           )}
                           <div className="space-y-3">
                             <div className="flex items-center gap-3">
-                              <div 
-                                onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
-                                className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-white shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:bg-pink-500 hover:scale-105 transition-all" : ""} bg-pink-650`}
-                                title={post.user?._id !== user._id ? "Send Direct Message" : ""}
-                              >
-                                {post.user?.fullName ? post.user.fullName[0].toUpperCase() : "S"}
-                              </div>
+                              {post.user?.profilePicture ? (
+                                <img 
+                                  src={post.user.profilePicture} 
+                                  alt="Seeker" 
+                                  onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
+                                  className={`h-9 w-9 rounded-full object-cover border border-slate-800 shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:scale-105 transition-all" : ""}`}
+                                  title={post.user?._id !== user._id ? "Send Direct Message" : ""}
+                                />
+                              ) : (
+                                <div 
+                                  onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
+                                  className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-white shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:bg-pink-500 hover:scale-105 transition-all" : ""} bg-pink-650`}
+                                  title={post.user?._id !== user._id ? "Send Direct Message" : ""}
+                                >
+                                  {post.user?.fullName ? post.user.fullName[0].toUpperCase() : "S"}
+                                </div>
+                              )}
                               <div>
                                 <h4 className="text-sm font-bold text-slate-200">{post.user?.fullName}</h4>
                                 <p className="text-[10px] text-slate-500 truncate">{post.user?.department} • {post.user?.faculty}</p>
@@ -1067,8 +1202,8 @@ const Dashboard = () => {
                                 <span className="truncate">{post.location}</span>
                               </div>
                               <div className="flex items-center gap-1.5">
-                                <DollarSign className="h-3.5 w-3.5 text-emerald-400" />
-                                <span>₦{post.budget.toLocaleString()} / yr</span>
+                                <Hash className="h-3.5 w-3.5 text-emerald-400" />
+                                <span>#{post.budget.toLocaleString()} / yr</span>
                               </div>
                               <div className="flex items-center gap-1.5">
                                 <Users className="h-3.5 w-3.5 text-pink-400" />
@@ -1149,13 +1284,23 @@ const Dashboard = () => {
                           )}
                           <div className="space-y-3">
                             <div className="flex items-center gap-3">
-                              <div 
-                                onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
-                                className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-white shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:bg-amber-500 hover:scale-105 transition-all" : ""} bg-amber-600`}
-                                title={post.user?._id !== user._id ? "Send Direct Message" : ""}
-                              >
-                                {post.user?.fullName ? post.user.fullName[0].toUpperCase() : "S"}
-                              </div>
+                              {post.user?.profilePicture ? (
+                                <img 
+                                  src={post.user.profilePicture} 
+                                  alt="Seeker" 
+                                  onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
+                                  className={`h-9 w-9 rounded-full object-cover border border-slate-800 shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:scale-105 transition-all" : ""}`}
+                                  title={post.user?._id !== user._id ? "Send Direct Message" : ""}
+                                />
+                              ) : (
+                                <div 
+                                  onClick={() => post.user && post.user._id !== user._id && startDirectMessage(post.user)}
+                                  className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-white shadow-inner ${post.user?._id !== user._id ? "cursor-pointer hover:bg-amber-500 hover:scale-105 transition-all" : ""} bg-amber-600`}
+                                  title={post.user?._id !== user._id ? "Send Direct Message" : ""}
+                                >
+                                  {post.user?.fullName ? post.user.fullName[0].toUpperCase() : "S"}
+                                </div>
+                              )}
                               <div>
                                 <h4 className="text-sm font-bold text-slate-200">{post.user?.fullName}</h4>
                                 <p className="text-[10px] text-slate-500 truncate">{post.user?.department} • {post.user?.faculty}</p>
@@ -1249,7 +1394,7 @@ const Dashboard = () => {
                           <div className="space-y-3">
                             <div className="flex items-center gap-2 justify-between">
                               <span className="px-2 py-0.5 rounded-md bg-slate-950 border border-slate-850 text-[10px] text-indigo-400 font-bold">{post.category}</span>
-                              <span className="text-xs font-black text-emerald-455">₦{post.price.toLocaleString()}</span>
+                              <span className="text-xs font-black text-emerald-455">#{post.price.toLocaleString()}</span>
                             </div>
                             
                             <div>
@@ -1294,49 +1439,62 @@ const Dashboard = () => {
                       <div className="grid md:grid-cols-2 gap-6">
                         {/* Name */}
                         <div>
-                          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Full Name</label>
+                          <label className="block text-xs font-semibold text-slate-550 uppercase tracking-wider mb-2">Full Name (Read-Only)</label>
                           <input
                             type="text"
                             value={profileForm.fullName}
-                            onChange={(e) => setProfileForm(p => ({ ...p, fullName: e.target.value }))}
-                            className="w-full bg-slate-950/80 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 px-4 text-slate-250 text-sm outline-none transition-all"
-                            required
+                            disabled
+                            className="w-full bg-slate-950/40 border border-slate-900 text-slate-500 rounded-xl py-3 px-4 text-sm cursor-not-allowed"
                           />
                         </div>
 
                         {/* Gender */}
                         <div>
-                          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Gender</label>
-                          <select
+                          <label className="block text-xs font-semibold text-slate-550 uppercase tracking-wider mb-2">Gender (Read-Only)</label>
+                          <input
+                            type="text"
                             value={profileForm.gender}
-                            onChange={(e) => setProfileForm(p => ({ ...p, gender: e.target.value }))}
+                            disabled
+                            className="w-full bg-slate-950/40 border border-slate-900 text-slate-500 rounded-xl py-3 px-4 text-sm cursor-not-allowed"
+                          />
+                        </div>
+
+                        {/* Faculty */}
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Faculty</label>
+                          <select
+                            value={profileForm.faculty}
+                            onChange={(e) => {
+                              const selectedFac = e.target.value;
+                              const depts = facultyDepartments[selectedFac] || [];
+                              setProfileForm(p => ({ 
+                                ...p, 
+                                faculty: selectedFac, 
+                                department: depts[0] || "" 
+                              }));
+                            }}
                             className="w-full bg-slate-950/80 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 px-4 text-slate-250 text-sm outline-none transition-all appearance-none cursor-pointer"
                           >
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <option value="">Select Faculty</option>
+                            {Object.keys(facultyDepartments).map((fac) => (
+                              <option key={fac} value={fac}>{fac}</option>
+                            ))}
                           </select>
                         </div>
 
-                        {/* Faculty (readonly to protect student account setup) */}
+                        {/* Department */}
                         <div>
-                          <label className="block text-xs font-semibold text-slate-550 uppercase tracking-wider mb-2">Faculty (Read-Only)</label>
-                          <input
-                            type="text"
-                            value={profileForm.faculty}
-                            disabled
-                            className="w-full bg-slate-950/40 border border-slate-900 text-slate-500 rounded-xl py-3 px-4 text-sm cursor-not-allowed"
-                          />
-                        </div>
-
-                        {/* Department (readonly) */}
-                        <div>
-                          <label className="block text-xs font-semibold text-slate-550 uppercase tracking-wider mb-2">Department (Read-Only)</label>
-                          <input
-                            type="text"
+                          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Department</label>
+                          <select
                             value={profileForm.department}
-                            disabled
-                            className="w-full bg-slate-950/40 border border-slate-900 text-slate-500 rounded-xl py-3 px-4 text-sm cursor-not-allowed"
-                          />
+                            onChange={(e) => setProfileForm(p => ({ ...p, department: e.target.value }))}
+                            className="w-full bg-slate-950/80 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 px-4 text-slate-250 text-sm outline-none transition-all appearance-none cursor-pointer"
+                          >
+                            <option value="">Select Department</option>
+                            {(facultyDepartments[profileForm.faculty] || []).map((dept) => (
+                              <option key={dept} value={dept}>{dept}</option>
+                            ))}
+                          </select>
                         </div>
 
                         {/* Level */}
@@ -1347,7 +1505,7 @@ const Dashboard = () => {
                             onChange={(e) => setProfileForm(p => ({ ...p, level: e.target.value }))}
                             className="w-full bg-slate-950/80 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 px-4 text-slate-250 text-sm outline-none transition-all appearance-none cursor-pointer"
                           >
-                            {["100 Level", "200 Level", "300 Level", "400 Level", "500 Level", "Spillover"].map((l) => (
+                            {["100 Level", "200 Level", "300 Level", "400 Level", "500 Level", "600 Level", "Spillover"].map((l) => (
                               <option key={l} value={l}>{l}</option>
                             ))}
                           </select>
@@ -1361,7 +1519,7 @@ const Dashboard = () => {
                             onChange={(e) => setProfileForm(p => ({ ...p, entryYear: e.target.value }))}
                             className="w-full bg-slate-950/80 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 px-4 text-slate-250 text-sm outline-none transition-all appearance-none cursor-pointer"
                           >
-                            {["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"].map((y) => (
+                            {["2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"].map((y) => (
                               <option key={y} value={y}>{y}</option>
                             ))}
                           </select>
@@ -1423,9 +1581,17 @@ const Dashboard = () => {
                                   : "bg-slate-950/20 border-transparent hover:bg-slate-900/40 text-slate-350"
                               }`}
                             >
-                              <div className="h-9 w-9 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 shrink-0 border border-slate-750">
-                                {chat.user?.fullName ? chat.user.fullName[0].toUpperCase() : "S"}
-                              </div>
+                              {chat.user?.profilePicture ? (
+                                <img 
+                                  src={chat.user.profilePicture} 
+                                  alt="Chat Avatar" 
+                                  className="h-9 w-9 rounded-full object-cover border border-slate-750 shrink-0"
+                                />
+                              ) : (
+                                <div className="h-9 w-9 rounded-full bg-slate-800 flex items-center justify-center font-bold text-slate-300 shrink-0 border border-slate-750">
+                                  {chat.user?.fullName ? chat.user.fullName[0].toUpperCase() : "S"}
+                                </div>
+                              )}
                               <div className="min-w-0 flex-1">
                                 <div className="flex justify-between items-baseline">
                                   <p className="text-xs font-bold truncate text-slate-200">{chat.user?.fullName}</p>
@@ -1441,7 +1607,7 @@ const Dashboard = () => {
                       )}
                     </div>
                   </div>
-
+ 
                   {/* Right Column: Chat Conversation Thread */}
                   <div className={`md:col-span-2 bg-slate-900/30 border border-slate-850 rounded-2xl flex flex-col overflow-hidden h-full animate-fadeIn ${selectedChatUser ? "flex" : "hidden md:flex"}`}>
                     {selectedChatUser ? (
@@ -1449,9 +1615,17 @@ const Dashboard = () => {
                         {/* Thread Header */}
                         <div className="p-4 border-b border-slate-850/60 flex items-center justify-between shrink-0 bg-slate-950/10">
                           <div className="flex items-center gap-3">
-                            <div className="h-9 w-9 rounded-full bg-indigo-650 flex items-center justify-center font-bold text-white shrink-0 shadow-inner">
-                              {selectedChatUser.fullName ? selectedChatUser.fullName[0].toUpperCase() : "S"}
-                            </div>
+                            {selectedChatUser.profilePicture ? (
+                              <img 
+                                src={selectedChatUser.profilePicture} 
+                                alt="Chat Thread Avatar" 
+                                className="h-9 w-9 rounded-full object-cover border border-slate-850 shrink-0 shadow-inner"
+                              />
+                            ) : (
+                              <div className="h-9 w-9 rounded-full bg-indigo-650 flex items-center justify-center font-bold text-white shrink-0 shadow-inner">
+                                {selectedChatUser.fullName ? selectedChatUser.fullName[0].toUpperCase() : "S"}
+                              </div>
+                            )}
                             <div>
                               <p className="text-xs font-bold text-slate-250">{selectedChatUser.fullName}</p>
                               <p className="text-[9px] text-slate-500 truncate">{selectedChatUser.email}</p>
@@ -1861,7 +2035,7 @@ const Dashboard = () => {
                   {selectedMarketplaceItem.category}
                 </span>
                 <h3 className="text-lg font-bold text-white leading-snug">{selectedMarketplaceItem.title}</h3>
-                <p className="text-xl font-black text-emerald-450">₦{selectedMarketplaceItem.price.toLocaleString()}</p>
+                <p className="text-xl font-black text-emerald-450">#{selectedMarketplaceItem.price.toLocaleString()}</p>
               </div>
 
               {/* Product Description */}
@@ -1875,9 +2049,17 @@ const Dashboard = () => {
                 <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Seller Profile</h4>
                 
                 <div className="flex items-start gap-4">
-                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-black text-white text-lg shadow-md shrink-0">
-                    {selectedMarketplaceItem.user?.fullName ? selectedMarketplaceItem.user.fullName[0].toUpperCase() : "S"}
-                  </div>
+                  {selectedMarketplaceItem.user?.profilePicture ? (
+                    <img 
+                      src={selectedMarketplaceItem.user.profilePicture} 
+                      alt="Seller" 
+                      className="h-12 w-12 rounded-full object-cover border border-slate-800 shrink-0 shadow-md"
+                    />
+                  ) : (
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-black text-white text-lg shadow-md shrink-0">
+                      {selectedMarketplaceItem.user?.fullName ? selectedMarketplaceItem.user.fullName[0].toUpperCase() : "S"}
+                    </div>
+                  )}
                   <div className="space-y-1.5 min-w-0 flex-1">
                     <p className="text-sm font-bold text-slate-200">{selectedMarketplaceItem.user?.fullName}</p>
                     <p className="text-xs text-slate-400 truncate">{selectedMarketplaceItem.user?.email}</p>

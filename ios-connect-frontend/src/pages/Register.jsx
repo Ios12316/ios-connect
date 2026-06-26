@@ -121,8 +121,8 @@ const facultyDepartments = {
   ]
 };
 
-const levels = ["100 Level", "200 Level", "300 Level", "400 Level", "500 Level"];
-const entryYears = ["2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+const levels = ["100 Level", "200 Level", "300 Level", "400 Level", "500 Level", "600 Level", "Spillover"];
+const entryYears = ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"];
 
 const Register = () => {
   const navigate = useNavigate();

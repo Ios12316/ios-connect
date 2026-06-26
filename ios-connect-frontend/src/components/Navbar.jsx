@@ -52,6 +52,7 @@ const Navbar = () => {
           <a href="/#features" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-sm font-medium">Features</a>
           <a href="/#stats" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-sm font-medium">Stats</a>
           <a href="/#about" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-sm font-medium">About</a>
+          <a href="/#contact" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-sm font-medium">Contact</a>
         </div>
 
         {/* Desktop Auth & Theme Toggle */}
@@ -103,16 +104,23 @@ const Navbar = () => {
               <a 
                 href="/#stats" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-slate-100 text-lg font-medium"
+                className="text-slate-700 dark:text-slate-300 hover:text-slate-955 dark:hover:text-slate-100 text-lg font-medium"
               >
                 Stats
               </a>
               <a 
                 href="/#about" 
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-slate-100 text-lg font-medium"
+                className="text-slate-700 dark:text-slate-300 hover:text-slate-955 dark:hover:text-slate-100 text-lg font-medium"
               >
                 About
+              </a>
+              <a 
+                href="/#contact" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-slate-700 dark:text-slate-300 hover:text-slate-955 dark:hover:text-slate-100 text-lg font-medium"
+              >
+                Contact
               </a>
               <hr className="border-slate-200 dark:border-slate-850" />
               <div className="flex flex-col gap-3 pt-2">
