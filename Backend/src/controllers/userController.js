@@ -395,4 +395,41 @@ export const resendVerification = async (req, res) => {
     }
 }
 
+export const contactSupport = async (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+        if (!name || !email || !message) {
+            return res.status(400).json({ message: "Please fill in your name, email, and message" });
+        }
+
+        const html = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px; background-color: #0f172a; color: #f8fafc;">
+                <h2 style="color: #6366f1; text-align: center; border-bottom: 1px solid #334155; padding-bottom: 10px;">New Help / Contact Request</h2>
+                <div style="margin-top: 20px;">
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Subject:</strong> ${subject || "General Support Request"}</p>
+                </div>
+                <div style="margin-top: 20px;">
+                    <p><strong>Message:</strong></p>
+                    <div style="background-color: #1e293b; padding: 15px; border-radius: 8px; color: #e2e8f0; line-height: 1.6; white-space: pre-wrap;">${message}</div>
+                </div>
+                <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;" />
+                <p style="font-size: 11px; color: #64748b; text-align: center;">This message was generated from the IOS CONNECT Help & Support Form.</p>
+            </div>
+        `;
+
+        await sendEmail({
+            email: "idowus187@gmail.com",
+            subject: `Help Support Request: ${subject || "General Inquiry"} - from ${name}`,
+            html
+        });
+
+        res.status(200).json({ message: "Your help request has been sent successfully. We will get back to you shortly!" });
+    } catch (error) {
+        console.error("Contact Support Error:", error);
+        res.status(500).json({ message: "Failed to send help request. Please try again later." });
+    }
+}
+
 

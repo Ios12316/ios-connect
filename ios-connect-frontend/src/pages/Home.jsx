@@ -19,8 +19,10 @@ import {
   HelpCircle
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import ContactModal from "../components/ContactModal";
 
 const Home = () => {
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
 
   const fadeIn = {
@@ -486,21 +488,35 @@ const Home = () => {
           <div className="md:col-span-3">
             <h4 className="text-white text-xs font-semibold uppercase tracking-wider mb-5">Features</h4>
             <ul className="space-y-3.5 text-xs sm:text-sm">
-              <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Marketplace</a></li>
-              <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Roommate Finder</a></li>
-              <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Study Partners</a></li>
-              <li><a href="#" className="text-slate-400 hover:text-white transition-colors">Student Forum</a></li>
+              <li><Link to="/login" className="text-slate-400 hover:text-white transition-colors">Marketplace</Link></li>
+              <li><Link to="/login" className="text-slate-400 hover:text-white transition-colors">Roommate Finder</Link></li>
+              <li><Link to="/login" className="text-slate-400 hover:text-white transition-colors">Study Partners</Link></li>
+              <li><Link to="/login" className="text-slate-400 hover:text-white transition-colors">Student Forum</Link></li>
             </ul>
           </div>
 
-          {/* Support / Location */}
+          {/* Support / Contact */}
           <div className="md:col-span-2">
-            <h4 className="text-white text-xs font-semibold uppercase tracking-wider mb-5">School Info</h4>
+            <h4 className="text-white text-xs font-semibold uppercase tracking-wider mb-5">Contact Support</h4>
             <ul className="space-y-3.5 text-xs sm:text-sm text-slate-400">
-              <li>Adekunle Ajasin University</li>
-              <li>Akungba-Akoko</li>
-              <li>Ondo State, Nigeria</li>
-              <li>support@iosconnect.edu</li>
+              <li>
+                <a href="mailto:idowus187@gmail.com" className="hover:text-white transition-colors">
+                  idowus187@gmail.com
+                </a>
+              </li>
+              <li>
+                <a href="https://wa.me/2348137451940" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  WhatsApp Support
+                </a>
+              </li>
+              <li>
+                <button 
+                  onClick={() => setIsContactOpen(true)} 
+                  className="hover:text-white transition-colors text-left focus:outline-none"
+                >
+                  Help Request Form
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -512,11 +528,13 @@ const Home = () => {
             &copy; 2026 IOS Connect. Created with love for university campuses. All rights reserved.
           </p>
           <div className="flex gap-6 text-xs text-slate-500">
-            <a href="#" className="hover:text-slate-400 transition-colors">Terms of Use</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Privacy Policy</a>
+            <Link to="/terms" className="hover:text-slate-400 transition-colors">Terms of Use</Link>
+            <Link to="/privacy" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
           </div>
         </div>
       </footer>
+
+      <ContactModal isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
 
     </div>
   );

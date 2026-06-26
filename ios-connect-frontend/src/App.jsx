@@ -12,6 +12,8 @@ import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
+import TermsOfUse from "./pages/TermsOfUse";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -48,6 +50,16 @@ function App() {
         <Route
           path="/verify-email/:token"
           element={<VerifyEmail />}
+        />
+
+        <Route
+          path="/terms"
+          element={<TermsOfUse />}
+        />
+
+        <Route
+          path="/privacy"
+          element={<PrivacyPolicy />}
         />
 
         <Route
