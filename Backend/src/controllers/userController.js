@@ -4,11 +4,12 @@ import bcryptjs from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 import crypto from "crypto";
 import sendEmail from "../utils/sendEmail.js";
+import cloudinary from "../utils/cloudinary.js";
 
 
 export const registerUser = async (req, res) => {
     try {
-        const { fullName, email, password, phoneNumber, school, faculty, department, level, gender, entryYear /*, profilePicture */ } = req.body;
+        const { fullName, email, password, phoneNumber, school, faculty, department, level, gender, entryYear, profilePicture } = req.body;
         const { error } = userValidation.validate(req.body);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
@@ -20,6 +21,22 @@ export const registerUser = async (req, res) => {
         const phoneExists = await User.findOne({ phoneNumber: phoneNumber.trim() });
         if (phoneExists) {
             return res.status(400).json({ message: "Phone number is already registered" });
+        }
+
+        let profilePictureUrl = "";
+        if (profilePicture && profilePicture.startsWith("data:image/")) {
+            try {
+                const uploadRes = await cloudinary.uploader.upload(profilePicture, {
+                    folder: "iosconnect/profiles",
+                    resource_type: "image"
+                });
+                profilePictureUrl = uploadRes.secure_url;
+            } catch (uploadError) {
+                console.error("Cloudinary upload error:", uploadError);
+                return res.status(500).json({ message: "Failed to upload profile picture" });
+            }
+        } else if (profilePicture) {
+            profilePictureUrl = profilePicture;
         }
 
         // Generate verification token
@@ -37,6 +54,7 @@ export const registerUser = async (req, res) => {
             level, 
             gender, 
             entryYear,
+            profilePicture: profilePictureUrl,
             isVerified: false,
             verificationToken: hashedVerificationToken
         });
@@ -150,6 +168,22 @@ export const updateProfile = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
+        let profilePictureUrl = user.profilePicture;
+        if (profilePicture && profilePicture.startsWith("data:image/")) {
+            try {
+                const uploadRes = await cloudinary.uploader.upload(profilePicture, {
+                    folder: "iosconnect/profiles",
+                    resource_type: "image"
+                });
+                profilePictureUrl = uploadRes.secure_url;
+            } catch (uploadError) {
+                console.error("Cloudinary upload error:", uploadError);
+                return res.status(500).json({ message: "Failed to upload profile picture" });
+            }
+        } else if (profilePicture !== undefined) {
+            profilePictureUrl = profilePicture;
+        }
+
         user.fullName = fullName || user.fullName;
         user.faculty = faculty || user.faculty;
         user.department = department || user.department;
@@ -157,7 +191,7 @@ export const updateProfile = async (req, res) => {
         user.gender = gender || user.gender;
         user.entryYear = entryYear || user.entryYear;
         user.bio = bio || user.bio;
-        user.profilePicture = profilePicture || user.profilePicture;
+        user.profilePicture = profilePictureUrl;
 
         const updatedUser = await user.save();
         res.status(200).json({

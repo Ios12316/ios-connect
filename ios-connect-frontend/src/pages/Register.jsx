@@ -145,8 +145,8 @@ const Register = () => {
     faculty: "",
     department: "",
     level: "",
-    entryYear: ""
-    // profilePicture: ""
+    entryYear: "",
+    profilePicture: ""
   });
 
   const handleChange = (e) => {
@@ -165,7 +165,6 @@ const Register = () => {
     setFormData(prev => ({ ...prev, gender }));
   };
 
-  /*
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -184,7 +183,6 @@ const Register = () => {
   const handleRemovePhoto = () => {
     setFormData(prev => ({ ...prev, profilePicture: "" }));
   };
-  */
 
   // Step Validations
   const isStep1Valid = () => {
@@ -230,6 +228,10 @@ const Register = () => {
       toast.error("Please select your gender");
       return;
     }
+    if (step === 3 && !isStep3Valid()) {
+      toast.error("Please fill in all academic details");
+      return;
+    }
     setDirection(1);
     setStep(prev => prev + 1);
   };
@@ -252,8 +254,8 @@ const Register = () => {
       // Map school name to "AAUA" to match default or validate backend expectation
       const payload = {
         ...formData,
-        school: "AAUA" // standard format stored in backend database
-        // profilePicture: formData.profilePicture
+        school: "AAUA", // standard format stored in backend database
+        profilePicture: formData.profilePicture
       };
 
       const response = await API.post("/users/register", payload);
@@ -347,7 +349,7 @@ const Register = () => {
           
           {/* Form Progress Header */}
           <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-800/60 overflow-x-auto gap-2 scrollbar-none">
-            {[1, 2, 3 /*, 4 */].map((s) => (
+            {[1, 2, 3, 4].map((s) => (
               <div key={s} className="flex items-center gap-2 shrink-0">
                 <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                   step === s 
@@ -359,9 +361,9 @@ const Register = () => {
                   {step > s ? <CheckCircle className="h-4 w-4" /> : s}
                 </div>
                 <span className={`text-xs font-semibold ${step === s ? "text-indigo-400" : "text-slate-500"}`}>
-                  {s === 1 ? "Account" : s === 2 ? "Profile" : "Academic" /* : "Photo" */}
+                  {s === 1 ? "Account" : s === 2 ? "Profile" : s === 3 ? "Academic" : "Photo"}
                 </span>
-                {s < 3 /* 4 */ && <div className="h-px w-6 sm:w-10 bg-slate-850" />}
+                {s < 4 && <div className="h-px w-6 sm:w-10 bg-slate-850" />}
               </div>
             ))}
           </div>
@@ -637,8 +639,7 @@ const Register = () => {
                 </motionFramer.div>
               )}
 
-              {/* STEP 4: Profile Picture Upload (New - Commented out until Cloudinary is ready) */}
-              {/*
+              {/* STEP 4: Profile Picture Upload (New) */}
               {step === 4 && (
                 <motionFramer.div
                   key="step4"
@@ -698,7 +699,6 @@ const Register = () => {
                   )}
                 </motionFramer.div>
               )}
-              */}
 
             </AnimatePresence>
 
@@ -716,7 +716,7 @@ const Register = () => {
                 </button>
               )}
               
-              {step < 3 ? (
+              {step < 4 ? (
                 <button
                   type="button"
                   onClick={nextStep}
