@@ -30,13 +30,15 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo and optional Back Button */}
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-955 dark:hover:text-slate-100 hover:scale-105 active:scale-95 transition-all duration-200"
-            title="Go Back"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
+          {location.pathname !== "/" && (
+            <button
+              onClick={() => navigate(-1)}
+              className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-955 dark:hover:text-slate-100 hover:scale-105 active:scale-95 transition-all duration-200"
+              title="Go Back"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+          )}
           <a href="/" className="flex items-center gap-2 group">
             <div className="p-2 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
               <GraduationCap className="h-6 w-6" />
