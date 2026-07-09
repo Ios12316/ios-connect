@@ -2066,7 +2066,7 @@ const Dashboard = () => {
                     
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       <span className="px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-[10px] text-indigo-400">
-                        {selectedMarketplaceItem.user?.faculty || "AAUA"}
+                        {selectedMarketplaceItem.user?.faculty || "Faculty"}
                       </span>
                       <span className="px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-[10px] text-purple-400 font-semibold">
                         {selectedMarketplaceItem.user?.department || "Student"}

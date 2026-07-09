@@ -23,102 +23,214 @@ import { AuthContext } from "../context/Context";
 import { toast } from "../store/notificationStore";
 import Navbar from "../components/Navbar";
 
-// Lists of faculties and departments at AAUA for dynamic dropdowns
-const facultyDepartments = {
-  "Faculty of Agriculture": [
-    "Agricultural Economics",
-    "Agricultural Extension and Rural Development",
-    "Agronomy",
-    "Animal Science",
-    "Fisheries and Aquaculture",
-    "Forestry and Wildlife Management",
-    "Food Science and Technology"
-  ],
-  "Faculty of Arts": [
-    "English Studies",
-    "History and International Studies",
-    "Performing Arts",
-    "Yoruba",
-    "Linguistics",
-    "Linguistics/Yoruba",
-    "Philosophy",
-    "Religion and African Culture",
-    "French"
-  ],
-  "Faculty of Education": [
-    "Adult Education",
-    "English Education",
-    "History Education",
-    "Religious Education",
-    "Yoruba Education",
-    "Biology Education",
-    "Chemistry Education",
-    "Computer Science Education",
-    "Integrated Science Education",
-    "Mathematics Education",
-    "Physics Education",
-    "Health Education",
-    "Human Kinetics Education",
-    "Technical Education",
-    "Guidance and Counseling",
-    "Early Childhood Education",
-    "Educational Management",
-    "Geography Education",
-    "Political Science Education",
-    "Economics Education",
-    "Social Studies Education",
-    "Library and Information Studies"
-  ],
-  "Faculty of Environmental Design and Management": [
-    "Architecture",
-    "Estate Management",
-    "Surveying and Geoinformatics",
-    "Urban and Regional Planning"
-  ],
-  "Faculty of Law": [
-    "Law"
-  ],
-  "Faculty of Science": [
-    "Biochemistry",
-    "Chemistry",
-    "Industrial Chemistry",
-    "Animal and Environmental Biology",
-    "Mathematics",
-    "Industrial Mathematics",
-    "Geology",
-    "Applied Geophysics",
-    "Microbiology",
-    "Physics and Electronics",
-    "Plant Science and Biotechnology"
-  ],
-  "Faculty of Social Sciences": [
-    "Criminology and Security Studies",
-    "Economics",
-    "Geography and Planning Sciences",
-    "Mass Communication",
-    "Political Science",
-    "Pure and Applied Psychology",
-    "Sociology"
-  ],
-  "Faculty of Administration and Management Sciences": [
-    "Accounting",
-    "Banking and Finance",
-    "Business Administration",
-    "Public Administration"
-  ],
-  "Faculty of Allied Health Sciences": [
-    "Medical Laboratory Science",
-    "Public Health",
-    "Nursing Science"
-  ],
-  "Faculty of Computing": [
-    "Computer Science",
-    "Information and Communication Technology (ICT)",
-    "Software Engineering",
-    "Cyber Security",
-    "Data Science and Artificial Intelligence",
-    "Information Systems"
-  ]
+// Lists of faculties and departments per school for dynamic dropdowns
+const schoolFacultyDepartments = {
+  "AAUA": {
+    "Faculty of Agriculture": [
+      "Agricultural Economics",
+      "Agricultural Extension and Rural Development",
+      "Agronomy",
+      "Animal Science",
+      "Fisheries and Aquaculture",
+      "Forestry and Wildlife Management",
+      "Food Science and Technology"
+    ],
+    "Faculty of Arts": [
+      "English Studies",
+      "History and International Studies",
+      "Performing Arts",
+      "Yoruba",
+      "Linguistics",
+      "Linguistics/Yoruba",
+      "Philosophy",
+      "Religion and African Culture",
+      "French"
+    ],
+    "Faculty of Education": [
+      "Adult Education",
+      "English Education",
+      "History Education",
+      "Religious Education",
+      "Yoruba Education",
+      "Biology Education",
+      "Chemistry Education",
+      "Computer Science Education",
+      "Integrated Science Education",
+      "Mathematics Education",
+      "Physics Education",
+      "Health Education",
+      "Human Kinetics Education",
+      "Technical Education",
+      "Guidance and Counseling",
+      "Early Childhood Education",
+      "Educational Management",
+      "Geography Education",
+      "Political Science Education",
+      "Economics Education",
+      "Social Studies Education",
+      "Library and Information Studies"
+    ],
+    "Faculty of Environmental Design and Management": [
+      "Architecture",
+      "Estate Management",
+      "Surveying and Geoinformatics",
+      "Urban and Regional Planning"
+    ],
+    "Faculty of Law": [
+      "Law"
+    ],
+    "Faculty of Science": [
+      "Biochemistry",
+      "Chemistry",
+      "Industrial Chemistry",
+      "Animal and Environmental Biology",
+      "Mathematics",
+      "Industrial Mathematics",
+      "Geology",
+      "Applied Geophysics",
+      "Microbiology",
+      "Physics and Electronics",
+      "Plant Science and Biotechnology"
+    ],
+    "Faculty of Social Sciences": [
+      "Criminology and Security Studies",
+      "Economics",
+      "Geography and Planning Sciences",
+      "Mass Communication",
+      "Political Science",
+      "Pure and Applied Psychology",
+      "Sociology"
+    ],
+    "Faculty of Administration and Management Sciences": [
+      "Accounting",
+      "Banking and Finance",
+      "Business Administration",
+      "Public Administration"
+    ],
+    "Faculty of Allied Health Sciences": [
+      "Medical Laboratory Science",
+      "Public Health",
+      "Nursing Science"
+    ],
+    "Faculty of Computing": [
+      "Computer Science",
+      "Information and Communication Technology (ICT)",
+      "Software Engineering",
+      "Cyber Security",
+      "Data Science and Artificial Intelligence",
+      "Information Systems"
+    ]
+  },
+  "UNILAG": {
+    "Faculty of Arts": [
+      "Creative Arts",
+      "English",
+      "French",
+      "Russian",
+      "History & Strategic Studies",
+      "Linguistic Igbo/Yoruba",
+      "Chinese",
+      "Philosophy",
+      "Christian Religious Studies",
+      "Islamic Religious Studies"
+    ],
+    "Faculty of Basic Medical Sciences": [
+      "Pharmacology",
+      "Physiology",
+      "Medical Laboratory Science"
+    ],
+    "Faculty of Clinical Sciences": [
+      "Medicine and Surgery",
+      "Nursing",
+      "Physiotherapy",
+      "Radiography"
+    ],
+    "Faculty of Dental Sciences": [
+      "Dentistry"
+    ],
+    "Faculty of Education": [
+      "Adult Education",
+      "Education Economics",
+      "Business Education",
+      "Education Islamic Religious Studies",
+      "Education Igbo",
+      "Education English",
+      "Early Childhood Education",
+      "Education Yoruba",
+      "Education French",
+      "Education History",
+      "Education Christian Religious Studies",
+      "Education Geography",
+      "Educational Administration",
+      "Educational Foundations",
+      "Health Education",
+      "Human Kinetics Education",
+      "Education Biology",
+      "Education Chemistry",
+      "Education Home Economics",
+      "Integrated Science Education",
+      "Education Mathematics",
+      "Education Physics",
+      "Technology Education"
+    ],
+    "Faculty of Engineering": [
+      "Biomedical Engineering",
+      "Chemical & Petroleum Engineering",
+      "Civil & Environmental Engineering",
+      "Computer Engineering",
+      "Electrical & Electronics Engineering",
+      "Mechanical Engineering",
+      "Metallurgical & Material Engineering",
+      "Surveying & Geoinformatics Engineering",
+      "Systems Engineering"
+    ],
+    "Faculty of Environmental Sciences": [
+      "Architecture",
+      "Building",
+      "Estate Management",
+      "Quantity Surveying",
+      "Urban & Regional Planning"
+    ],
+    "Faculty of Law": [
+      "Law"
+    ],
+    "Faculty of Management Sciences": [
+      "Accounting",
+      "Actuarial Science",
+      "Insurance",
+      "Business Administration",
+      "Finance",
+      "IRPM"
+    ],
+    "Faculty of Pharmacy": [
+      "Pharmacy"
+    ],
+    "Faculty of Science": [
+      "Botany",
+      "Cell Biology & Genetics",
+      "Chemistry",
+      "Computer Science",
+      "Geology",
+      "Geophysics",
+      "Marine Biology",
+      "Fisheries",
+      "Mathematics",
+      "Industrial Mathematics",
+      "Statistics",
+      "Microbiology",
+      "Physics",
+      "Zoology"
+    ],
+    "Faculty of Social Sciences": [
+      "Economics",
+      "Geography",
+      "Mass Communication",
+      "Political Science",
+      "Psychology",
+      "Social Work",
+      "Sociology"
+    ]
+  }
 };
 
 const levels = ["100 Level", "200 Level", "300 Level", "400 Level", "500 Level", "600 Level", "Spillover"];
@@ -140,7 +252,7 @@ const Register = () => {
     email: "",
     password: "",
     phoneNumber: "",
-    school: "Adekunle Ajasin University, Akungba-Akoko (AAUA)",
+    school: "AAUA",
     gender: "",
     faculty: "",
     department: "",
@@ -153,6 +265,11 @@ const Register = () => {
     const { name, value } = e.target;
     setFormData(prev => {
       const updated = { ...prev, [name]: value };
+      // Reset faculty and department if school changes
+      if (name === "school") {
+        updated.faculty = "";
+        updated.department = "";
+      }
       // Reset department if faculty changes
       if (name === "faculty") {
         updated.department = "";
@@ -249,10 +366,8 @@ const Register = () => {
     }
     setLoading(true);
     try {
-      // Map school name to "AAUA" to match default or validate backend expectation
       const payload = {
         ...formData,
-        school: "AAUA", // standard format stored in backend database
         profilePicture: formData.profilePicture
       };
 
@@ -489,16 +604,19 @@ const Register = () => {
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                         <School className="h-5 w-5" />
                       </div>
-                      <input
-                        type="text"
+                      <select
                         name="school"
                         value={formData.school}
-                        disabled
-                        className="w-full bg-slate-950/40 border border-slate-900 text-slate-500 rounded-xl py-3 pl-11 pr-4 text-sm cursor-not-allowed transition-all outline-none"
-                      />
+                        onChange={handleChange}
+                        className="w-full bg-slate-950 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 pl-11 pr-4 text-slate-250 text-sm outline-none transition-all appearance-none cursor-pointer"
+                        required
+                      >
+                        <option value="AAUA">Adekunle Ajasin University, Akungba-Akoko (AAUA)</option>
+                        <option value="UNILAG">University of Lagos (UNILAG)</option>
+                      </select>
                     </div>
                     <span className="text-[10px] text-indigo-400 mt-1.5 block flex items-center gap-1">
-                      <AlertCircle className="h-3 w-3" /> Enabled exclusively for AAUA community members.
+                      <AlertCircle className="h-3 w-3" /> Select your university.
                     </span>
                   </div>
 
@@ -539,7 +657,7 @@ const Register = () => {
                   exit="exit"
                   className="space-y-6"
                 >
-                  {/* Faculty selection */}
+                   {/* Faculty selection */}
                   <div>
                     <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
                       Faculty
@@ -556,7 +674,7 @@ const Register = () => {
                         required
                       >
                         <option value="" className="text-slate-600">Select Faculty</option>
-                        {Object.keys(facultyDepartments).map((fac) => (
+                        {Object.keys(schoolFacultyDepartments[formData.school] || {}).map((fac) => (
                           <option key={fac} value={fac} className="bg-slate-950 text-slate-300">{fac}</option>
                         ))}
                       </select>
@@ -585,7 +703,7 @@ const Register = () => {
                         <option value="" className="text-slate-600">
                           {!formData.faculty ? "Select Faculty First" : "Select Department"}
                         </option>
-                        {formData.faculty && facultyDepartments[formData.faculty]?.map((dept) => (
+                        {formData.faculty && schoolFacultyDepartments[formData.school]?.[formData.faculty]?.map((dept) => (
                           <option key={dept} value={dept} className="bg-slate-950 text-slate-300">{dept}</option>
                         ))}
                       </select>
