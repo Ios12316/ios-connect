@@ -244,7 +244,7 @@ const Home = () => {
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
                   247 Students Online
                 </span>
-                <span>AAUA Campus Network</span>
+                <span>University Campus Network</span>
               </div>
             </div>
           </motion.div>
