@@ -21,6 +21,7 @@ import {
 import API from "../services/axios";
 import { AuthContext } from "../context/Context";
 import { toast } from "../store/notificationStore";
+import Navbar from "../components/Navbar";
 import { schoolFacultyDepartments, schoolOptions } from "../data/schoolsData";
 
 
