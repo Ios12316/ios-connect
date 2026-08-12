@@ -27,104 +27,8 @@ import {
 } from "lucide-react";
 import API from "../services/axios";
 import { AuthContext } from "../context/Context";
-import { toast } from "../store/notificationStore";
+import { schoolFacultyDepartments } from "../data/schoolsData";
 
-const facultyDepartments = {
-  "Faculty of Agriculture": [
-    "Agricultural Economics",
-    "Agricultural Extension and Rural Development",
-    "Agronomy",
-    "Animal Science",
-    "Fisheries and Aquaculture",
-    "Forestry and Wildlife Management",
-    "Food Science and Technology"
-  ],
-  "Faculty of Arts": [
-    "English Studies",
-    "History and International Studies",
-    "Performing Arts",
-    "Yoruba",
-    "Linguistics",
-    "Linguistics/Yoruba",
-    "Philosophy",
-    "Religion and African Culture",
-    "French"
-  ],
-  "Faculty of Education": [
-    "Adult Education",
-    "English Education",
-    "History Education",
-    "Religious Education",
-    "Yoruba Education",
-    "Biology Education",
-    "Chemistry Education",
-    "Computer Science Education",
-    "Integrated Science Education",
-    "Mathematics Education",
-    "Physics Education",
-    "Health Education",
-    "Human Kinetics Education",
-    "Technical Education",
-    "Guidance and Counseling",
-    "Early Childhood Education",
-    "Educational Management",
-    "Geography Education",
-    "Political Science Education",
-    "Economics Education",
-    "Social Studies Education",
-    "Library and Information Studies"
-  ],
-  "Faculty of Environmental Design and Management": [
-    "Architecture",
-    "Estate Management",
-    "Surveying and Geoinformatics",
-    "Urban and Regional Planning"
-  ],
-  "Faculty of Law": [
-    "Law"
-  ],
-  "Faculty of Science": [
-    "Biochemistry",
-    "Chemistry",
-    "Industrial Chemistry",
-    "Animal and Environmental Biology",
-    "Mathematics",
-    "Industrial Mathematics",
-    "Geology",
-    "Applied Geophysics",
-    "Microbiology",
-    "Physics and Electronics",
-    "Plant Science and Biotechnology"
-  ],
-  "Faculty of Social Sciences": [
-    "Criminology and Security Studies",
-    "Economics",
-    "Geography and Planning Sciences",
-    "Mass Communication",
-    "Political Science",
-    "Pure and Applied Psychology",
-    "Sociology"
-  ],
-  "Faculty of Administration and Management Sciences": [
-    "Accounting",
-    "Banking and Finance",
-    "Business Administration",
-    "Public Administration"
-  ],
-  "Faculty of Allied Health Sciences": [
-    "Medical Laboratory Science",
-    "Public Health",
-    "Nursing Science"
-  ],
-  "Faculty of Computing": [
-    "Computer Science",
-    "Information and Communication Technology (ICT)",
-    "Software Engineering",
-    "Cyber Security",
-    "Data Science and Artificial Intelligence",
-    "Information Systems"
-  ]
-};
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -1461,12 +1365,13 @@ const Dashboard = () => {
 
                         {/* Faculty */}
                         <div>
-                          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Faculty</label>
+                          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Faculty / College / School</label>
                           <select
                             value={profileForm.faculty}
                             onChange={(e) => {
                               const selectedFac = e.target.value;
-                              const depts = facultyDepartments[selectedFac] || [];
+                              const currentFaculties = schoolFacultyDepartments[user?.school] || schoolFacultyDepartments["AAUA"];
+                              const depts = currentFaculties[selectedFac] || [];
                               setProfileForm(p => ({ 
                                 ...p, 
                                 faculty: selectedFac, 
@@ -1476,7 +1381,7 @@ const Dashboard = () => {
                             className="w-full bg-slate-950/80 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 px-4 text-slate-250 text-sm outline-none transition-all appearance-none cursor-pointer"
                           >
                             <option value="">Select Faculty</option>
-                            {Object.keys(facultyDepartments).map((fac) => (
+                            {Object.keys(schoolFacultyDepartments[user?.school] || schoolFacultyDepartments["AAUA"]).map((fac) => (
                               <option key={fac} value={fac}>{fac}</option>
                             ))}
                           </select>
@@ -1491,7 +1396,7 @@ const Dashboard = () => {
                             className="w-full bg-slate-950/80 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 px-4 text-slate-250 text-sm outline-none transition-all appearance-none cursor-pointer"
                           >
                             <option value="">Select Department</option>
-                            {(facultyDepartments[profileForm.faculty] || []).map((dept) => (
+                            {((schoolFacultyDepartments[user?.school] || schoolFacultyDepartments["AAUA"])[profileForm.faculty] || []).map((dept) => (
                               <option key={dept} value={dept}>{dept}</option>
                             ))}
                           </select>
