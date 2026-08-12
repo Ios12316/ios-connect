@@ -44,7 +44,8 @@ const Register = () => {
     email: "",
     password: "",
     phoneNumber: "",
-    school: "AAUA",
+    school: "",
+
     gender: "",
     faculty: "",
     department: "",
@@ -134,7 +135,7 @@ const Register = () => {
       }
     }
     if (step === 2 && !isStep2Valid()) {
-      toast.error("Please select your gender");
+      toast.error("Please select your university and gender");
       return;
     }
     if (step === 3 && !isStep3Valid()) {
@@ -403,6 +404,7 @@ const Register = () => {
                         className="w-full bg-slate-950 border border-slate-850 hover:border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-xl py-3 pl-11 pr-4 text-slate-250 text-sm outline-none transition-all appearance-none cursor-pointer"
                         required
                       >
+                        <option value="" className="text-slate-600">Select your university</option>
                         {schoolOptions.map((opt) => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
                         ))}
