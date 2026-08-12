@@ -343,11 +343,129 @@ export const schoolFacultyDepartments = {
       "Transport Planning and Policy",
       "Transport Technology and Infrastructure"
     ]
+  },
+  "FUOYE": {
+    "Faculty of Agriculture": [
+      "Agricultural Economics and Extension",
+      "Animal Production and Health",
+      "Crop Science and Horticulture",
+      "Fisheries and Aquaculture",
+      "Food Science and Technology",
+      "Hospitality and Tourism Management",
+      "Soil Science and Land Resources Management",
+      "Water Resources Management & Agrometeorology"
+    ],
+    "Faculty of Arts": [
+      "English and Literary Studies",
+      "History and International Studies",
+      "Linguistics and Languages",
+      "Theatre and Media Arts",
+      "Philosophy",
+      "Law",
+      "Religious Studies"
+    ],
+    "Faculty of Basic Medical Sciences": [
+      "Anatomy",
+      "Medical Laboratory Science",
+      "Nursing",
+      "Physiology",
+      "Radiography and Radiation Science"
+    ],
+    "Faculty of Communication and Information Engineering": [
+      "Computer Engineering",
+      "Information and Communication Engineering",
+      "System Engineering"
+    ],
+    "Faculty of Communication and Media Studies": [
+      "Broadcasting",
+      "Journalism and Media Studies",
+      "Mass Communication",
+      "Public Relations"
+    ],
+    "Faculty of Computing": [
+      "Computer Science",
+      "Cyber Security",
+      "Data Science and Analytics",
+      "Software Engineering"
+    ],
+    "Faculty of Environmental Design and Management": [
+      "Architecture",
+      "Building",
+      "Estate Management",
+      "Quantity Surveying",
+      "Surveying and Geoinformatics",
+      "Urban and Regional Planning"
+    ],
+    "Faculty of Education": [
+      "Adult Education",
+      "Agricultural Education",
+      "Business Education",
+      "Biology Education",
+      "Chemistry Education",
+      "Economics Education",
+      "Educational Management",
+      "Educational Technology",
+      "English Language Education",
+      "Guidance and Counselling",
+      "Health Education",
+      "Human Kinetics",
+      "Library and Information Science",
+      "Mathematics Education",
+      "Physics Education",
+      "Primary Education"
+    ],
+    "Faculty of Engineering": [
+      "Agricultural Engineering",
+      "Civil Engineering",
+      "Electrical and Electronics Engineering",
+      "Mechanical Engineering",
+      "Materials and Metallurgical Engineering",
+      "Mechatronics Engineering"
+    ],
+    "Faculty of Life Sciences": [
+      "Animal and Environmental Biology",
+      "Biochemistry",
+      "Environmental Management and Toxicology",
+      "Microbiology",
+      "Plant Science and Biotechnology"
+    ],
+    "Faculty of Management Sciences": [
+      "Accounting",
+      "Business Administration",
+      "Banking and Finance",
+      "Public Administration"
+    ],
+    "Faculty of Pharmacy": [
+      "Doctor of Pharmacy"
+    ],
+    "Faculty of Physical Sciences": [
+      "Industrial Chemistry",
+      "Chemistry",
+      "Geology",
+      "Geophysics",
+      "Mathematics",
+      "Physics",
+      "Statistics"
+    ],
+    "Faculty of Social Sciences": [
+      "Criminology and Security Studies",
+      "Demography and Social Statistics",
+      "Economics and Development Studies",
+      "Peace and Conflict Studies",
+      "Political Science",
+      "Psychology",
+      "Sociology"
+    ],
+    "Faculty of Medicine": [
+      "Medicine and Surgery"
+    ]
   }
 };
 
 export const schoolOptions = [
   { value: "AAUA", label: "Adekunle Ajasin University, Akungba-Akoko (AAUA)" },
   { value: "UNILAG", label: "University of Lagos (UNILAG)" },
-  { value: "LASU", label: "Lagos State University (LASU)" }
+  { value: "LASU", label: "Lagos State University (LASU)" },
+  { value: "FUOYE", label: "Federal University Oye-Ekiti (FUOYE)" }
 ];
+
